@@ -43,11 +43,24 @@ body {
   isolation: isolate;
 }
 
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.phone-frame[data-screen="home"] .screen-home,
+.phone-frame[data-screen="result"] .screen-result,
+.phone-frame[data-screen="member"] .screen-member {
+  display: block;
+}
+
 .page-image,
 .vip-motion,
 .vip-animation,
 .motion-star,
-.privileges-card {
+.privileges-card,
+.hotspot {
   user-select: none;
   -webkit-user-drag: none;
 }
@@ -58,6 +71,51 @@ body {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+.hotspot {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hotspot-upload {
+  left: 14.6%;
+  top: 40.8%;
+  width: 70.7%;
+  height: 5.9%;
+}
+
+.hotspot-back {
+  left: 3.3%;
+  top: 6.2%;
+  width: 7.5%;
+  height: 4.9%;
+}
+
+.hotspot-result-primary {
+  left: 5.5%;
+  top: 89.1%;
+  width: 89%;
+  height: 6.2%;
+}
+
+.hotspot-result-download {
+  left: 88.8%;
+  top: 6.3%;
+  width: 7.7%;
+  height: 4.1%;
+}
+
+.hotspot-result-retry {
+  left: 51.3%;
+  top: 54.9%;
+  width: 42.1%;
+  height: 5.5%;
 }
 
 .vip-motion {

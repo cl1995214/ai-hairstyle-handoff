@@ -3,18 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>开通会员</title>
+    <title>AI 换发型交互预览</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="preview" aria-label="开通会员页面预览">
-      <section class="phone-frame">
+    <main class="preview" aria-label="AI 换发型交互预览">
+      <section class="phone-frame" data-screen="home">
+        <article class="screen screen-home" aria-label="首页">
+          <img
+            class="page-image"
+            src="./assets/home.png"
+            alt="首页"
+            draggable="false"
+          />
+          <button class="hotspot hotspot-upload" type="button" data-target="result" aria-label="上传正面照片"></button>
+        </article>
+
+        <article class="screen screen-result" aria-label="结果页">
+          <img
+            class="page-image"
+            src="./assets/result.png"
+            alt="结果页"
+            draggable="false"
+          />
+          <button class="hotspot hotspot-back" type="button" data-target="home" aria-label="返回首页"></button>
+          <button class="hotspot hotspot-result-primary" type="button" data-target="member" aria-label="进入开通会员页"></button>
+          <button class="hotspot hotspot-result-download" type="button" data-target="member" aria-label="下载"></button>
+          <button class="hotspot hotspot-result-retry" type="button" data-target="member" aria-label="再试一个"></button>
+        </article>
+
+        <article class="screen screen-member" aria-label="开通会员页">
         <img
           class="page-image"
           src="./assets/page-base.png"
           alt="开通会员页面"
           draggable="false"
         />
+        <button class="hotspot hotspot-back" type="button" data-target="result" aria-label="返回结果页"></button>
 
         <div class="vip-motion">
           <img
@@ -51,7 +76,18 @@
           alt="尊享特权"
           draggable="false"
         />
+        </article>
       </section>
     </main>
+
+    <script>
+      const frame = document.querySelector(".phone-frame");
+
+      document.querySelectorAll("[data-target]").forEach((control) => {
+        control.addEventListener("click", () => {
+          frame.dataset.screen = control.dataset.target;
+        });
+      });
+    </script>
   </body>
 </html>
