@@ -12,7 +12,7 @@
         <article class="screen screen-home" aria-label="首页">
           <img
             class="page-image"
-            src="./assets/home.png"
+            src="./assets/home.jpg"
             alt="首页"
             draggable="false"
           />
@@ -23,7 +23,7 @@
         <article class="screen screen-result" aria-label="结果页">
           <img
             class="page-image"
-            src="./assets/result.png"
+            data-src="./assets/result.jpg"
             alt="结果页"
             draggable="false"
           />
@@ -39,7 +39,7 @@
         <article class="screen screen-member" aria-label="开通会员页">
         <img
           class="page-image"
-          src="./assets/page-base.png"
+          data-src="./assets/page-base.jpg"
           alt="开通会员页面"
           draggable="false"
         />
@@ -48,7 +48,7 @@
         <div class="vip-motion">
           <img
             class="motion-star motion-star-top"
-            src="./assets/star.png"
+            data-src="./assets/star.png"
             alt=""
             aria-hidden="true"
             draggable="false"
@@ -56,7 +56,7 @@
 
           <img
             class="motion-star motion-star-bottom"
-            src="./assets/star.png"
+            data-src="./assets/star.png"
             alt=""
             aria-hidden="true"
             draggable="false"
@@ -64,19 +64,19 @@
 
           <video
             class="vip-animation"
-            src="./assets/vip-animation.webm"
+            data-src="./assets/vip-animation.webm"
             autoplay
             muted
             loop
             playsinline
-            preload="auto"
+            preload="none"
             aria-label="VIP 动画"
           ></video>
         </div>
 
         <img
           class="privileges-card"
-          src="./assets/privileges.png"
+          data-src="./assets/privileges.png"
           alt="尊享特权"
           draggable="false"
         />
@@ -89,9 +89,21 @@
     <script>
       const frame = document.querySelector(".phone-frame");
 
+      const loadScreenAssets = (screenName) => {
+        document
+          .querySelectorAll(`.screen-${screenName} [data-src]`)
+          .forEach((asset) => {
+            if (!asset.getAttribute("src")) {
+              asset.setAttribute("src", asset.dataset.src);
+            }
+          });
+      };
+
       document.querySelectorAll("[data-target]").forEach((control) => {
         control.addEventListener("click", () => {
-          frame.dataset.screen = control.dataset.target;
+          const target = control.dataset.target;
+          loadScreenAssets(target);
+          frame.dataset.screen = target;
         });
       });
     </script>

@@ -6,9 +6,11 @@
 
 - `index.html`：页面入口
 - `styles.css`：响应式缩放和动画覆盖位置
-- `assets/page-reference.png`：完整页面静态参考底图
 - `assets/vip-animation.webm`：顶部 VIP 动画
-- `assets/page-base.png`、`assets/privileges.png`：备用切图素材
+- `assets/home.jpg`：首页底图
+- `assets/result.jpg`：结果页底图
+- `assets/page-base.jpg`：会员页底图
+- `assets/privileges.png`：会员权益卡片
 
 ## GitHub Pages
 
