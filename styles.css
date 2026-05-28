@@ -188,6 +188,7 @@ body {
   object-position: center;
   border: 0;
   background: transparent;
+  mix-blend-mode: screen;
   z-index: 2;
 }
 
