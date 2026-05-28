@@ -148,6 +148,13 @@ body {
   width: 9.5%;
 }
 
+.tap-hint-result-color {
+  left: 47.9%;
+  top: 64.1%;
+  width: 9.5%;
+  animation-delay: 0.22s;
+}
+
 .tap-hint-member {
   left: 7.7%;
   top: 7.8%;
