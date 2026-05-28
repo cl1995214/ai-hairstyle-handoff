@@ -138,18 +138,20 @@ body {
 }
 
 .tap-hint-upload {
-  left: 63.6%;
-  top: 39.5%;
+  left: 67.2%;
+  top: 41.2%;
 }
 
 .tap-hint-result {
-  left: 73.5%;
-  top: 53.6%;
+  left: 7.7%;
+  top: 7.8%;
+  width: 9.5%;
 }
 
 .tap-hint-member {
-  left: 69.5%;
-  top: 88.2%;
+  left: 7.7%;
+  top: 7.8%;
+  width: 9.5%;
 }
 
 .vip-motion {
