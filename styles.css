@@ -1,0 +1,189 @@
+:root {
+  --design-width: 1704;
+  --design-height: 3690;
+  --page-bg: #eaf3ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.96), rgba(232, 242, 255, 0.78) 38%, #dfeafb 100%);
+  color: #0a0a0a;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "PingFang SC",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+}
+
+.preview {
+  min-height: 100vh;
+  display: grid;
+  place-items: start center;
+  padding: max(0px, env(safe-area-inset-top)) 0 max(0px, env(safe-area-inset-bottom));
+}
+
+.phone-frame {
+  position: relative;
+  width: min(100vw, 426px);
+  aspect-ratio: var(--design-width) / var(--design-height);
+  overflow: hidden;
+  background: var(--page-bg);
+  isolation: isolate;
+}
+
+.page-image,
+.vip-motion,
+.vip-animation,
+.motion-star,
+.privileges-card {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.page-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.vip-motion {
+  position: absolute;
+  left: 45.6%;
+  top: 12.55%;
+  width: 54.6%;
+  height: 21.96%;
+  pointer-events: none;
+  z-index: 2;
+  animation: motionFollow 2.4s ease-in-out infinite;
+}
+
+.vip-animation {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border: 0;
+  background: transparent;
+  z-index: 2;
+}
+
+.motion-star {
+  position: absolute;
+  height: auto;
+  display: block;
+  z-index: 1;
+  opacity: 0;
+  transform-origin: center;
+  animation: starPopTwinkle 2.4s ease-in-out infinite;
+}
+
+.motion-star-top {
+  left: 18.4%;
+  top: 12.6%;
+  width: 9.1%;
+}
+
+.motion-star-bottom {
+  left: 11.2%;
+  top: 58.4%;
+  width: 6.8%;
+  animation-delay: 0.08s;
+}
+
+.privileges-card {
+  position: absolute;
+  left: 4.1%;
+  top: 32.27%;
+  width: 91.55%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  z-index: 4;
+}
+
+@keyframes motionFollow {
+  0%,
+  24%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  40% {
+    transform: translate3d(0, -3.2%, 0);
+  }
+
+  56% {
+    transform: translate3d(0, 1.1%, 0);
+  }
+
+  72% {
+    transform: translate3d(0, -1.1%, 0);
+  }
+}
+
+@keyframes starPopTwinkle {
+  0%,
+  30% {
+    opacity: 0;
+    transform: translate3d(24%, 18%, 0) scale(0.2) rotate(-8deg);
+  }
+
+  42% {
+    opacity: 1;
+    transform: translate3d(-10%, -14%, 0) scale(1.22) rotate(7deg);
+  }
+
+  52% {
+    opacity: 0.82;
+    transform: translate3d(5%, 2%, 0) scale(0.9) rotate(-4deg);
+  }
+
+  64% {
+    opacity: 1;
+    transform: translate3d(-4%, -6%, 0) scale(1.08) rotate(3deg);
+  }
+
+  78% {
+    opacity: 0.72;
+    transform: translate3d(4%, 1%, 0) scale(0.98) rotate(0deg);
+  }
+
+  90% {
+    opacity: 1;
+    transform: translate3d(-2%, -3%, 0) scale(1.05) rotate(2deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.85) rotate(0deg);
+  }
+}
+
+@media (min-width: 720px) {
+  .preview {
+    padding-block: 24px;
+  }
+
+  .phone-frame {
+    border-radius: 22px;
+    box-shadow:
+      0 28px 70px rgba(45, 71, 110, 0.26),
+      0 4px 18px rgba(45, 71, 110, 0.16);
+  }
+}
