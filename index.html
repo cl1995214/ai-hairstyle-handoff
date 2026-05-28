@@ -65,6 +65,7 @@
           <video
             class="vip-animation"
             data-src="./assets/vip-animation.webm"
+            data-skip-ios="true"
             autoplay
             muted
             loop
@@ -72,6 +73,15 @@
             preload="none"
             aria-label="VIP 动画"
           ></video>
+
+          <img
+            class="vip-fallback"
+            data-src="./assets/vip-fallback.png"
+            data-ios-only="true"
+            alt=""
+            aria-hidden="true"
+            draggable="false"
+          />
         </div>
 
         <img
@@ -88,11 +98,18 @@
 
     <script>
       const frame = document.querySelector(".phone-frame");
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+      if (isIOS) {
+        document.documentElement.classList.add("is-ios");
+      }
 
       const loadScreenAssets = (screenName) => {
         document
           .querySelectorAll(`.screen-${screenName} [data-src]`)
           .forEach((asset) => {
+            if (isIOS && asset.dataset.skipIos === "true") return;
+            if (!isIOS && asset.dataset.iosOnly === "true") return;
             if (!asset.getAttribute("src")) {
               asset.setAttribute("src", asset.dataset.src);
             }
