@@ -172,10 +172,12 @@
         workCanvas.height = height;
         canvas.width = width;
         canvas.height = height;
+        let lastFrameTime = 0;
 
-        const render = () => {
+        const render = (timestamp) => {
           if (!canvas.isConnected) return;
-          if (!video.paused && !video.ended && video.videoWidth && video.videoHeight) {
+          if (timestamp - lastFrameTime >= 42 && !video.paused && !video.ended && video.videoWidth && video.videoHeight) {
+            lastFrameTime = timestamp;
             workContext.clearRect(0, 0, width, height);
             drawCover(workContext, video, width, height);
             const frame = removeEdgeBlack(workContext.getImageData(0, 0, width, height));
