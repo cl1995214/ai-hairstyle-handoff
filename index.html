@@ -65,7 +65,6 @@
           <video
             class="vip-animation"
             data-src="./assets/vip-animation.webm"
-            data-skip-ios="true"
             autoplay
             muted
             loop
@@ -74,14 +73,7 @@
             aria-label="VIP 动画"
           ></video>
 
-          <img
-            class="vip-fallback"
-            data-src="./assets/vip-fallback.png"
-            data-ios-only="true"
-            alt=""
-            aria-hidden="true"
-            draggable="false"
-          />
+          <canvas class="vip-canvas" aria-hidden="true"></canvas>
         </div>
 
         <img
@@ -104,16 +96,118 @@
         document.documentElement.classList.add("is-ios");
       }
 
+      let iosCanvasStarted = false;
+
+      const drawCover = (context, video, width, height) => {
+        const scale = Math.max(width / video.videoWidth, height / video.videoHeight);
+        const drawWidth = video.videoWidth * scale;
+        const drawHeight = video.videoHeight * scale;
+        context.drawImage(video, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
+      };
+
+      const removeEdgeBlack = (imageData) => {
+        const { data, width, height } = imageData;
+        const total = width * height;
+        const seen = new Uint8Array(total);
+        const queue = new Int32Array(total);
+        let head = 0;
+        let tail = 0;
+
+        const isBackground = (index) => {
+          const offset = index * 4;
+          return data[offset] < 42 && data[offset + 1] < 42 && data[offset + 2] < 42;
+        };
+
+        const add = (index) => {
+          if (!seen[index] && isBackground(index)) {
+            seen[index] = 1;
+            queue[tail] = index;
+            tail += 1;
+          }
+        };
+
+        for (let x = 0; x < width; x += 1) {
+          add(x);
+          add((height - 1) * width + x);
+        }
+
+        for (let y = 0; y < height; y += 1) {
+          add(y * width);
+          add(y * width + width - 1);
+        }
+
+        while (head < tail) {
+          const index = queue[head];
+          head += 1;
+          const x = index % width;
+          const y = Math.floor(index / width);
+          if (x > 0) add(index - 1);
+          if (x < width - 1) add(index + 1);
+          if (y > 0) add(index - width);
+          if (y < height - 1) add(index + width);
+        }
+
+        for (let i = 0; i < tail; i += 1) {
+          data[queue[i] * 4 + 3] = 0;
+        }
+
+        return imageData;
+      };
+
+      const startIOSCanvasVideo = () => {
+        if (!isIOS || iosCanvasStarted) return;
+
+        const video = document.querySelector(".vip-animation");
+        const canvas = document.querySelector(".vip-canvas");
+        if (!video || !canvas || !video.getAttribute("src")) return;
+
+        iosCanvasStarted = true;
+
+        const width = 360;
+        const height = 314;
+        const workCanvas = document.createElement("canvas");
+        const workContext = workCanvas.getContext("2d", { willReadFrequently: true });
+        const displayContext = canvas.getContext("2d");
+        workCanvas.width = width;
+        workCanvas.height = height;
+        canvas.width = width;
+        canvas.height = height;
+
+        const render = () => {
+          if (!canvas.isConnected) return;
+          if (!video.paused && !video.ended && video.videoWidth && video.videoHeight) {
+            workContext.clearRect(0, 0, width, height);
+            drawCover(workContext, video, width, height);
+            const frame = removeEdgeBlack(workContext.getImageData(0, 0, width, height));
+            displayContext.putImageData(frame, 0, 0);
+          }
+          requestAnimationFrame(render);
+        };
+
+        const playAndRender = () => {
+          video.play().catch(() => {});
+          requestAnimationFrame(render);
+        };
+
+        if (video.readyState >= 2) {
+          playAndRender();
+        } else {
+          video.addEventListener("loadeddata", playAndRender, { once: true });
+        }
+      };
+
       const loadScreenAssets = (screenName) => {
         document
           .querySelectorAll(`.screen-${screenName} [data-src]`)
           .forEach((asset) => {
-            if (isIOS && asset.dataset.skipIos === "true") return;
-            if (!isIOS && asset.dataset.iosOnly === "true") return;
             if (!asset.getAttribute("src")) {
               asset.setAttribute("src", asset.dataset.src);
             }
           });
+
+        if (screenName === "member") {
+          startIOSCanvasVideo();
+        }
       };
 
       document.querySelectorAll("[data-target]").forEach((control) => {

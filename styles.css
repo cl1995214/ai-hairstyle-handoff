@@ -58,7 +58,7 @@ body {
 .page-image,
 .vip-motion,
 .vip-animation,
-.vip-fallback,
+.vip-canvas,
 .motion-star,
 .privileges-card,
 .tap-hint,
@@ -193,25 +193,23 @@ body {
   z-index: 2;
 }
 
-.vip-fallback {
+.vip-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
   border: 0;
   display: none;
   z-index: 2;
 }
 
 .is-ios .vip-animation {
-  display: none;
+  display: block;
+  opacity: 0;
 }
 
-.is-ios .vip-fallback {
+.is-ios .vip-canvas {
   display: block;
-  animation: iosVipPop 2.4s ease-in-out infinite;
 }
 
 .motion-star {
@@ -263,29 +261,6 @@ body {
   62% {
     opacity: 0.8;
     transform: translate3d(1.5%, 1.5%, 0) scale(0.86);
-  }
-}
-
-@keyframes iosVipPop {
-  0%,
-  24%,
-  100% {
-    filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  40% {
-    filter: drop-shadow(0 8px 18px rgba(91, 177, 255, 0.2));
-    transform: translate3d(0, -2.5%, 0) scale(1.015);
-  }
-
-  56% {
-    transform: translate3d(0, 1%, 0) scale(0.996);
-  }
-
-  72% {
-    filter: drop-shadow(0 5px 14px rgba(173, 107, 255, 0.16));
-    transform: translate3d(0, -0.8%, 0) scale(1.006);
   }
 }
 
