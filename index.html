@@ -7,12 +7,19 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <section class="mobile-block" aria-label="移动端提示">
+      <div class="mobile-block-panel">
+        <h1>请用电脑浏览器打开</h1>
+        <p>当前页面为电脑端交互预览，手机端暂不支持完整动画效果。</p>
+      </div>
+    </section>
+
     <main class="preview" aria-label="AI 换发型交互预览">
       <section class="phone-frame" data-screen="home">
         <article class="screen screen-home" aria-label="首页">
           <img
             class="page-image"
-            src="./assets/home.jpg"
+            data-src="./assets/home.jpg"
             alt="首页"
             draggable="false"
           />
@@ -90,7 +97,13 @@
 
     <script>
       const frame = document.querySelector(".phone-frame");
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+        (navigator.maxTouchPoints > 1 && window.matchMedia("(max-width: 820px)").matches);
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+      if (isMobile) {
+        document.documentElement.classList.add("is-mobile");
+      }
 
       if (isIOS) {
         document.documentElement.classList.add("is-ios");
@@ -105,55 +118,6 @@
         context.drawImage(video, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
       };
 
-      const removeEdgeBlack = (imageData) => {
-        const { data, width, height } = imageData;
-        const total = width * height;
-        const seen = new Uint8Array(total);
-        const queue = new Int32Array(total);
-        let head = 0;
-        let tail = 0;
-
-        const isBackground = (index) => {
-          const offset = index * 4;
-          return data[offset] < 42 && data[offset + 1] < 42 && data[offset + 2] < 42;
-        };
-
-        const add = (index) => {
-          if (!seen[index] && isBackground(index)) {
-            seen[index] = 1;
-            queue[tail] = index;
-            tail += 1;
-          }
-        };
-
-        for (let x = 0; x < width; x += 1) {
-          add(x);
-          add((height - 1) * width + x);
-        }
-
-        for (let y = 0; y < height; y += 1) {
-          add(y * width);
-          add(y * width + width - 1);
-        }
-
-        while (head < tail) {
-          const index = queue[head];
-          head += 1;
-          const x = index % width;
-          const y = Math.floor(index / width);
-          if (x > 0) add(index - 1);
-          if (x < width - 1) add(index + 1);
-          if (y > 0) add(index - width);
-          if (y < height - 1) add(index + width);
-        }
-
-        for (let i = 0; i < tail; i += 1) {
-          data[queue[i] * 4 + 3] = 0;
-        }
-
-        return imageData;
-      };
-
       const startIOSCanvasVideo = () => {
         if (!isIOS || iosCanvasStarted) return;
 
@@ -163,32 +127,29 @@
 
         iosCanvasStarted = true;
 
-        const width = 360;
-        const height = 314;
-        const workCanvas = document.createElement("canvas");
-        const workContext = workCanvas.getContext("2d", { willReadFrequently: true });
+        const width = 465;
+        const height = 405;
         const displayContext = canvas.getContext("2d");
-        workCanvas.width = width;
-        workCanvas.height = height;
         canvas.width = width;
         canvas.height = height;
-        let lastFrameTime = 0;
 
-        const render = (timestamp) => {
+        const render = () => {
           if (!canvas.isConnected) return;
-          if (timestamp - lastFrameTime >= 42 && !video.paused && !video.ended && video.videoWidth && video.videoHeight) {
-            lastFrameTime = timestamp;
-            workContext.clearRect(0, 0, width, height);
-            drawCover(workContext, video, width, height);
-            const frame = removeEdgeBlack(workContext.getImageData(0, 0, width, height));
-            displayContext.putImageData(frame, 0, 0);
+          if (!video.paused && !video.ended && video.videoWidth && video.videoHeight) {
+            displayContext.clearRect(0, 0, width, height);
+            drawCover(displayContext, video, width, height);
           }
-          requestAnimationFrame(render);
+
+          if (video.requestVideoFrameCallback) {
+            video.requestVideoFrameCallback(render);
+          } else {
+            requestAnimationFrame(render);
+          }
         };
 
         const playAndRender = () => {
           video.play().catch(() => {});
-          requestAnimationFrame(render);
+          render();
         };
 
         if (video.readyState >= 2) {
@@ -214,11 +175,16 @@
 
       document.querySelectorAll("[data-target]").forEach((control) => {
         control.addEventListener("click", () => {
+          if (isMobile) return;
           const target = control.dataset.target;
           loadScreenAssets(target);
           frame.dataset.screen = target;
         });
       });
+
+      if (!isMobile) {
+        loadScreenAssets("home");
+      }
     </script>
   </body>
 </html>
